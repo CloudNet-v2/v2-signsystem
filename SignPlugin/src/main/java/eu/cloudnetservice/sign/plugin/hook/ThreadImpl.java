@@ -68,12 +68,12 @@ public class ThreadImpl extends Thread {
 				}
 			}
 
-			SearchingAnimation searchingAnimation = SignManager.getInstance().getSignLayoutConfig().getSearchingAnimation();
+			if (SignManager.getInstance().getSignLayoutConfig() != null) {
 
-			SignLayout searchLayer = signNetworkHandlerAdapter.getSearchingLayout(animationTick);
-			Bukkit.getScheduler().runTask(signNetworkHandlerAdapter.getPlugin(), new Runnable() {
-				@Override
-				public void run() {
+				SearchingAnimation searchingAnimation = SignManager.getInstance().getSignLayoutConfig().getSearchingAnimation();
+
+				SignLayout searchLayer = signNetworkHandlerAdapter.getSearchingLayout(animationTick);
+				Bukkit.getScheduler().runTask(signNetworkHandlerAdapter.getPlugin(), () -> {
 					for (Sign sign : SignManager.getInstance().getSigns().values()) {
 						boolean exists = signNetworkHandlerAdapter.exists(sign);
 
@@ -195,20 +195,20 @@ public class ThreadImpl extends Thread {
 							}
 						}
 					}
+				});
+
+				if (searchingAnimation.getAnimations() <= animationTick) {
+					animationTick = 1;
 				}
-			});
 
-			if (searchingAnimation.getAnimations() <= animationTick) {
-				animationTick = 1;
-			}
+				animationTick++;
+				valueTick = !valueTick;
 
-			animationTick++;
-			valueTick = !valueTick;
-
-			try {
-				Thread.sleep(1000 / searchingAnimation.getAnimationsPerSecond());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				try {
+					Thread.sleep(1000 / searchingAnimation.getAnimationsPerSecond());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

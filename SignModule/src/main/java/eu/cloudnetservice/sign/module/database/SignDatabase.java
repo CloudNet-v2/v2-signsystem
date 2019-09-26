@@ -15,9 +15,6 @@ import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-/**
- * Created by Tareko on 22.07.2017.
- */
 public class SignDatabase extends DatabaseUsable {
 
     public SignDatabase(Database database) {
@@ -51,7 +48,7 @@ public class SignDatabase extends DatabaseUsable {
         Type typeToken = TypeToken.get(Sign.class).getType();
         java.util.Map<UUID, Sign> signs = new LinkedHashMap<>();
         for (String key : document.keys()) {
-            signs.put(UUID.fromString(key), (Sign) document.getObject(key, typeToken));
+            signs.put(UUID.fromString(key), document.getObject(key, typeToken));
         }
         return signs;
     }

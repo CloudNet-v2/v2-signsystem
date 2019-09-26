@@ -13,8 +13,8 @@ public class BukkitSignManager extends SignManager {
 
 	public BukkitSignManager(JavaPlugin plugin) {
 		super(new ThreadImpl(new SignNetworkHandlerAdapter(plugin)));
-		plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
 		CloudAPI.getInstance().getNetworkHandlerProvider().registerHandler(((ThreadImpl)getWorker()).getSignNetworkHandlerAdapter());
+		plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
 		getWorker().setDaemon(true);
 		getWorker().start();
 

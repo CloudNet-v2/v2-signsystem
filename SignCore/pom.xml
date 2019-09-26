@@ -29,7 +29,7 @@
             <groupId>de.dytanic.cloudnet</groupId>
             <artifactId>cloudnet-api-core</artifactId>
             <version>${dependency.cloudnet.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

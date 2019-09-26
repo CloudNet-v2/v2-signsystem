@@ -27,9 +27,6 @@ public final class ProjectMain extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		if (CloudAPI.getInstance() != null) {
-			CloudAPI.getInstance().shutdown();
-		}
 		getServer().getMessenger().unregisterOutgoingPluginChannel(this);
 		if (SignManager.getInstance() != null && SignManager.getInstance().getWorker() != null) {
 			SignManager.getInstance().getWorker().stop();

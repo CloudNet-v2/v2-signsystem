@@ -1,7 +1,6 @@
 package eu.cloudnetservice.sign.core.models;
 
 import de.dytanic.cloudnet.lib.server.info.ServerInfo;
-import de.dytanic.cloudnet.lib.serverselectors.sign.Position;
 
 import java.util.Objects;
 import java.util.UUID;

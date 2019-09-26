@@ -5,8 +5,8 @@ import de.dytanic.cloudnet.api.handlers.adapter.NetworkHandlerAdapter;
 import de.dytanic.cloudnet.lib.NetworkUtils;
 import de.dytanic.cloudnet.lib.server.ServerState;
 import de.dytanic.cloudnet.lib.server.info.ServerInfo;
-import de.dytanic.cloudnet.lib.serverselectors.sign.Position;
 import eu.cloudnetservice.sign.core.manager.SignManager;
+import eu.cloudnetservice.sign.core.models.Position;
 import eu.cloudnetservice.sign.core.models.Sign;
 import eu.cloudnetservice.sign.core.models.SignGroupLayouts;
 import eu.cloudnetservice.sign.core.models.SignLayout;
@@ -490,11 +490,12 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
 	}
 
 	public Position toPosition(Location location) {
-		return new Position(CloudAPI.getInstance().getGroup(),
-				location.getWorld().getName(),
+		return new Position(
 				location.getX(),
 				location.getY(),
-				location.getZ());
+				location.getZ(),
+				location.getWorld().getName(),
+				CloudAPI.getInstance().getGroup());
 	}
 
 	public void sendUpdateSynchronized(Location location, String[] layout) {

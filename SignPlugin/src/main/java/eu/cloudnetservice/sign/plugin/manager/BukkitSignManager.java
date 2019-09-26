@@ -1,12 +1,9 @@
 package eu.cloudnetservice.sign.plugin.manager;
 
 import de.dytanic.cloudnet.api.CloudAPI;
-import de.dytanic.cloudnet.lib.NetworkUtils;
-import de.dytanic.cloudnet.lib.server.info.ServerInfo;
-import de.dytanic.cloudnet.lib.utility.Catcher;
-import de.dytanic.cloudnet.lib.utility.MapWrapper;
 import eu.cloudnetservice.sign.core.manager.SignManager;
 import eu.cloudnetservice.sign.plugin.adapter.SignNetworkHandlerAdapter;
+import eu.cloudnetservice.sign.plugin.event.BukkitUpdateSignLayoutsEvent;
 import eu.cloudnetservice.sign.plugin.hook.ThreadImpl;
 import eu.cloudnetservice.sign.plugin.listener.SignListener;
 import org.bukkit.Bukkit;
@@ -26,6 +23,6 @@ public class BukkitSignManager extends SignManager {
 
 	@Override
 	public void updateLayoutCall() {
-
+		Bukkit.getPluginManager().callEvent(new BukkitUpdateSignLayoutsEvent(getSignLayoutConfig()));
 	}
 }

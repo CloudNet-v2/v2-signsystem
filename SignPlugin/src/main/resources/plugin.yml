@@ -1,0 +1,8 @@
+name: SignSystem
+version: ${sign.version}
+author: TheMeinerLP
+website: https://cloudnetservice.eu/
+description: CloudNet Sign Interface for the Central server
+
+main: eu.cloudnetservice.sign.plugin.ProjectMain
+

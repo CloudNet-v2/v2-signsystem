@@ -12,9 +12,6 @@ import de.dytanic.cloudnetcore.CloudNet;
 import eu.cloudnetservice.sign.core.models.Sign;
 import eu.cloudnetservice.sign.module.ProjectMain;
 
-/**
- * Created by Tareko on 22.08.2017.
- */
 public class PacketInAddSign extends PacketInHandler {
 
     @Override

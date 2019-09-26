@@ -19,9 +19,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 
-/**
- * Created by Tareko on 22.07.2017.
- */
 public class ConfigSignLayout {
 
 	private final Path path = Paths.get("local/signLayout.json");

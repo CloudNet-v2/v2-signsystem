@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>eu.cloudnetservice</groupId>
+    <artifactId>SignSystem</artifactId>
+    <packaging>pom</packaging>
+    <version>dev-snapshot</version>
+    <modules>
+        <module>SignPlugin</module>
+        <module>SignModule</module>
+        <module>SignCore</module>
+    </modules>
+
+    <properties>
+        <dependency.cloudnet.version>dev-snapshot</dependency.cloudnet.version>
+        <sign.version>dev-snapshot</sign.version>
+        <dependency.spigot.version>1.8.8-R0.1-SNAPSHOT</dependency.spigot.version>
+        <dependency.bungeecord.version>1.8-1.12</dependency.bungeecord.version>
+    </properties>
+
+
+</project>

@@ -6,3 +6,6 @@ description: CloudNet Sign Interface for the Central server
 
 main: eu.cloudnetservice.sign.plugin.ProjectMain
 
+commands:
+  signs:
+

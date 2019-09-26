@@ -3,9 +3,11 @@ package eu.cloudnetservice.sign.plugin;
 import de.dytanic.cloudnet.api.CloudAPI;
 import de.dytanic.cloudnet.api.config.CloudConfigLoader;
 import de.dytanic.cloudnet.api.config.ConfigTypeLoader;
+import de.dytanic.cloudnet.bridge.internal.command.bukkit.CommandCloudServer;
 import de.dytanic.cloudnet.lib.network.protocol.packet.PacketRC;
 import eu.cloudnetservice.sign.core.manager.SignManager;
 import eu.cloudnetservice.sign.core.packets.PacketInSignSelector;
+import eu.cloudnetservice.sign.plugin.commands.SignsCommand;
 import eu.cloudnetservice.sign.plugin.hook.ServerCancelTask;
 import eu.cloudnetservice.sign.plugin.manager.BukkitSignManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +36,11 @@ public final class ProjectMain extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		CloudAPI.getInstance().bootstrap();
+		SignsCommand command = new SignsCommand();
+
+		getCommand("signs").setExecutor(command);
+		getCommand("signs").setPermission("cloudnet.command.signs");
+		getCommand("signs").setTabCompleter(command);
 	}
 
 	@Override

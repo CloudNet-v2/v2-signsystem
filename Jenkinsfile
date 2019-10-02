@@ -42,9 +42,9 @@ pipeline {
     stage('Release ZIP') {
       steps {
         sh '''mkdir -p temp;
-        cp notify-module/target/*.jar temp/;
-        cp notify-plugin/target/*.jar temp/;'''
-        zip archive: true, dir: 'temp', glob: '', zipFile: 'NotifySystem.zip'
+        cp sign-module/target/*.jar temp/;
+        cp sign-plugin/target/*.jar temp/;'''
+        zip archive: true, dir: 'temp', glob: '', zipFile: 'SignSystem.zip'
         sh 'rm -r temp/';
       }
     }
@@ -57,7 +57,7 @@ pipeline {
   post {
     always {
       withCredentials([string(credentialsId: 'cloudnet-discord-ci-webhook', variable: 'url')]) {
-        discordSend description: 'New build for NotifySystem!', footer: 'New build!', link: env.BUILD_URL, successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'), title: JOB_NAME, webhookURL: url
+        discordSend description: 'New build for SignSystem!', footer: 'New build!', link: env.BUILD_URL, successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'), title: JOB_NAME, webhookURL: url
       }
     }
   }

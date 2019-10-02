@@ -9,9 +9,9 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>SignPlugin</module>
-        <module>SignModule</module>
-        <module>SignCore</module>
+        <module>sign-plugin</module>
+        <module>sign-module</module>
+        <module>sign-core</module>
     </modules>
 
     <properties>

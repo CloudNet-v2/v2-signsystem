@@ -1,4 +1,4 @@
-name: v2-NotifySystem Build
+name: v2-SignSystem Build
 
 on: [create, push, pull_request]
 
@@ -23,8 +23,8 @@ jobs:
     - name: Release ZIP
       run: |
         mkdir -p temp;
-        cp notify-plugin/target/*.jar temp/;
-        cp notify-module/target/*.jar temp/;
+        cp sign-plugin/target/*.jar temp/;
+        cp sign-module/target/*.jar temp/;
     - uses: actions/upload-artifact@master
       with:
         name: v2-NotifySystem

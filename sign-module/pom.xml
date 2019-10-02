@@ -17,7 +17,6 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.1</version>
                 <configuration>
-                    <!-- put your configurations here -->
                 </configuration>
                 <executions>
                     <execution>
@@ -49,6 +48,7 @@
             <groupId>eu.cloudnetservice</groupId>
             <artifactId>SignCore</artifactId>
             <version>${sign.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.dytanic.cloudnet</groupId>

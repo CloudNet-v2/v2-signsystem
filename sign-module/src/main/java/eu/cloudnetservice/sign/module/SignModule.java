@@ -14,12 +14,12 @@ import eu.cloudnetservice.sign.module.packet.in.PacketInAddSign;
 import eu.cloudnetservice.sign.module.packet.in.PacketInRemoveSign;
 import eu.cloudnetservice.sign.module.packet.out.PacketOutSignSelector;
 
-public class SigtnModule extends CoreModule implements IEventListener<UpdateAllEvent> {
-    private static SigtnModule instance;
+public class SignModule extends CoreModule implements IEventListener<UpdateAllEvent> {
+    private static SignModule instance;
     private ConfigSignLayout configSignLayout;
     private SignDatabase signDatabase;
 
-    public static SigtnModule getInstance() {
+    public static SignModule getInstance() {
         return instance;
     }
 

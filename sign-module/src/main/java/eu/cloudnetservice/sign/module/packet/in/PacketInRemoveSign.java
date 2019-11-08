@@ -10,14 +10,14 @@ import de.dytanic.cloudnet.lib.network.protocol.packet.PacketSender;
 import de.dytanic.cloudnet.lib.utility.document.Document;
 import de.dytanic.cloudnetcore.CloudNet;
 import eu.cloudnetservice.sign.core.models.Sign;
-import eu.cloudnetservice.sign.module.ProjectMain;
+import eu.cloudnetservice.sign.module.SigtnModule;
 
 public class PacketInRemoveSign extends PacketInHandler {
 
     @Override
     public void handleInput(Document data, PacketSender packetSender) {
         Sign sign = data.getObject("sign", TypeToken.get(Sign.class).getType());
-        ProjectMain.getInstance().getSignDatabase().removeSign(sign.getUniqueId());
+        SigtnModule.getInstance().getSignDatabase().removeSign(sign.getUniqueId());
 
         CloudNet.getInstance().getNetworkManager().reload();
         CloudNet.getInstance().getNetworkManager().updateAll();

@@ -6,7 +6,6 @@ package eu.cloudnetservice.sign.module.packet.out;
 
 import de.dytanic.cloudnet.lib.network.protocol.packet.Packet;
 import de.dytanic.cloudnet.lib.network.protocol.packet.PacketRC;
-
 import de.dytanic.cloudnet.lib.utility.document.Document;
 import eu.cloudnetservice.sign.core.models.Sign;
 import eu.cloudnetservice.sign.core.models.SignLayoutConfig;

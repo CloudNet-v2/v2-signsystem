@@ -11,18 +11,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitSignManager extends SignManager {
 
-	public BukkitSignManager(JavaPlugin plugin) {
-		super(new ThreadImpl(new SignNetworkHandlerAdapter(plugin)));
-		CloudAPI.getInstance().getNetworkHandlerProvider().registerHandler(((ThreadImpl)getWorker()).getSignNetworkHandlerAdapter());
-		plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
-		getWorker().setDaemon(true);
-		getWorker().start();
+    public BukkitSignManager(JavaPlugin plugin) {
+        super(new ThreadImpl(new SignNetworkHandlerAdapter(plugin)));
+        CloudAPI.getInstance().getNetworkHandlerProvider().registerHandler(((ThreadImpl) getWorker()).getSignNetworkHandlerAdapter());
+        plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
+        plugin.getServer().getScheduler().runTaskTimer(plugin, getWorker(), 0L, 20L);
 
-		Bukkit.getPluginManager().registerEvents(new SignListener(this),plugin);
-	}
+        Bukkit.getPluginManager().registerEvents(new SignListener(this), plugin);
+    }
 
-	@Override
-	public void updateLayoutCall() {
-		Bukkit.getPluginManager().callEvent(new BukkitUpdateSignLayoutsEvent(getSignLayoutConfig()));
-	}
+    @Override
+    public void updateLayoutCall() {
+        Bukkit.getPluginManager().callEvent(new BukkitUpdateSignLayoutsEvent(getSignLayoutConfig()));
+    }
 }

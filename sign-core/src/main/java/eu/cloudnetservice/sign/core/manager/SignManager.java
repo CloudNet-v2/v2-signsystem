@@ -8,36 +8,36 @@ import java.util.Map;
 import java.util.UUID;
 
 public abstract class SignManager {
-	protected static SignManager instance;
+    protected static SignManager instance;
 
-	private final Map<UUID, Sign> signMap = new HashMap<>();
-	private SignLayoutConfig signLayoutConfig;
-	private final Thread worker;
+    private final Map<UUID, Sign> signMap = new HashMap<>();
+    private final Runnable worker;
+    private SignLayoutConfig signLayoutConfig;
 
-	public SignManager(Thread worker) {
-		this.worker = worker;
-		instance = this;
-	}
+    public SignManager(Runnable worker) {
+        this.worker = worker;
+        instance = this;
+    }
 
-	public abstract void updateLayoutCall();
+    public static SignManager getInstance() {
+        return instance;
+    }
 
-	public void setSignLayoutConfig(SignLayoutConfig signLayoutConfig) {
-		this.signLayoutConfig = signLayoutConfig;
-	}
+    public abstract void updateLayoutCall();
 
-	public Thread getWorker() {
-		return worker;
-	}
+    public Runnable getWorker() {
+        return worker;
+    }
 
-	public SignLayoutConfig getSignLayoutConfig() {
-		return signLayoutConfig;
-	}
+    public SignLayoutConfig getSignLayoutConfig() {
+        return signLayoutConfig;
+    }
 
-	public Map<UUID, Sign> getSigns() {
-		return signMap;
-	}
+    public void setSignLayoutConfig(SignLayoutConfig signLayoutConfig) {
+        this.signLayoutConfig = signLayoutConfig;
+    }
 
-	public static SignManager getInstance() {
-		return instance;
-	}
+    public Map<UUID, Sign> getSigns() {
+        return signMap;
+    }
 }

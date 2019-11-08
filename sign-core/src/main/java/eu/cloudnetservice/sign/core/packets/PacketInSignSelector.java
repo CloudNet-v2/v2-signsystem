@@ -16,30 +16,31 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class PacketInSignSelector extends PacketInHandler {
-	@Override
-	public void handleInput(Document data, PacketSender packetSender) {
 
-		Map<UUID, Sign> signMap = data.getObject("signs", TypeToken.getParameterized(Map.class, UUID.class, Sign.class).getType());
-		SignLayoutConfig signLayoutConfig = data.getObject("signLayoutConfig", TypeToken.get(SignLayoutConfig.class).getType());
+    @Override
+    public void handleInput(Document data, PacketSender packetSender) {
+        Map<UUID, Sign> signMap = data.getObject("signs", TypeToken.getParameterized(Map.class, UUID.class, Sign.class).getType());
+        SignLayoutConfig signLayoutConfig = data.getObject("signLayoutConfig", TypeToken.get(SignLayoutConfig.class).getType());
 
-		Map<UUID, Sign> values = signMap.entrySet().stream().filter(uuidSignEntry -> uuidSignEntry.getValue().getPosition().getGroup().equals(CloudAPI.getInstance().getGroup())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-		if (SignManager.getInstance() != null) {
-			SignManager.getInstance().updateLayoutCall();
-			SignManager.getInstance().setSignLayoutConfig(signLayoutConfig);
-			Collection<UUID> collection = new HashSet<>();
-			for (Sign sign : SignManager.getInstance().getSigns().values()) {
-				if (!values.containsKey(sign.getUniqueId())) {
-					collection.add(sign.getUniqueId());
-				}
-			}
-			for (UUID x : collection) {
-				SignManager.getInstance().getSigns().remove(x);
-			}
-			for (Sign sign : values.values()) {
-				if (!SignManager.getInstance().getSigns().containsKey(sign.getUniqueId())) {
-					SignManager.getInstance().getSigns().put(sign.getUniqueId(), sign);
-				}
-			}
-		}
-	}
+        Map<UUID, Sign> values = signMap.entrySet().stream().filter(uuidSignEntry -> uuidSignEntry.getValue().getPosition().getGroup().equals(
+            CloudAPI.getInstance().getGroup())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        if (SignManager.getInstance() != null) {
+            SignManager.getInstance().updateLayoutCall();
+            SignManager.getInstance().setSignLayoutConfig(signLayoutConfig);
+            Collection<UUID> collection = new HashSet<>();
+            for (Sign sign : SignManager.getInstance().getSigns().values()) {
+                if (!values.containsKey(sign.getUniqueId())) {
+                    collection.add(sign.getUniqueId());
+                }
+            }
+            for (UUID x : collection) {
+                SignManager.getInstance().getSigns().remove(x);
+            }
+            for (Sign sign : values.values()) {
+                if (!SignManager.getInstance().getSigns().containsKey(sign.getUniqueId())) {
+                    SignManager.getInstance().getSigns().put(sign.getUniqueId(), sign);
+                }
+            }
+        }
+    }
 }

@@ -12,27 +12,29 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignListener implements Listener {
 
-	private final SignManager signManager;
+    private final SignManager signManager;
 
-	public SignListener(SignManager signManager) {
-		this.signManager = signManager;
-	}
+    public SignListener(SignManager signManager) {
+        this.signManager = signManager;
+    }
 
 
-	@EventHandler
-	public void handleInteract(PlayerInteractEvent e) {
-		if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && e.getClickedBlock() != null && e.getClickedBlock()
-				.getState() instanceof org.bukkit.block.Sign) {
-			if (((ThreadImpl)signManager.getWorker()).getSignNetworkHandlerAdapter().containsPosition(e.getClickedBlock().getLocation())) {
-				Sign sign = ((ThreadImpl)signManager.getWorker()).getSignNetworkHandlerAdapter().getSignByPosition(e.getClickedBlock().getLocation());
-				if (sign.getServerInfo() != null) {
-					String s = sign.getServerInfo().getServiceId().getServerId();
-					ByteArrayDataOutput output = ByteStreams.newDataOutput();
-					output.writeUTF("Connect");
-					output.writeUTF(s);
-					e.getPlayer().sendPluginMessage(((ThreadImpl)signManager.getWorker()).getSignNetworkHandlerAdapter().getPlugin(), "BungeeCord", output.toByteArray());
-				}
-			}
-		}
-	}
+    @EventHandler
+    public void handleInteract(PlayerInteractEvent e) {
+        if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && e.getClickedBlock() != null && e.getClickedBlock()
+                                                                                                .getState() instanceof org.bukkit.block.Sign) {
+            if (((ThreadImpl) signManager.getWorker()).getSignNetworkHandlerAdapter().containsPosition(e.getClickedBlock().getLocation())) {
+                Sign sign = ((ThreadImpl) signManager.getWorker()).getSignNetworkHandlerAdapter().getSignByPosition(e.getClickedBlock().getLocation());
+                if (sign.getServerInfo() != null) {
+                    String s = sign.getServerInfo().getServiceId().getServerId();
+                    ByteArrayDataOutput output = ByteStreams.newDataOutput();
+                    output.writeUTF("Connect");
+                    output.writeUTF(s);
+                    e.getPlayer().sendPluginMessage(((ThreadImpl) signManager.getWorker()).getSignNetworkHandlerAdapter().getPlugin(),
+                        "BungeeCord",
+                        output.toByteArray());
+                }
+            }
+        }
+    }
 }

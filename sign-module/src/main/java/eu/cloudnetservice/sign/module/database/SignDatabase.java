@@ -29,7 +29,7 @@ public class SignDatabase extends DatabaseUsable {
     public SignDatabase appendSign(Sign sign) {
         Document x = database.getDocument("signs");
         Document document = x.getDocument("signs");
-        document.append(sign.getUniqueId().toString(), sign);
+        document.append(sign.getUniqueId().toString(), Document.GSON.toJsonTree(sign));
         database.insert(document);
         return this;
     }

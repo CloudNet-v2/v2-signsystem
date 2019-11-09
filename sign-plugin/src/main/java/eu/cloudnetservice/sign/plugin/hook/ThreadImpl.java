@@ -16,11 +16,13 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
+import static eu.cloudnetservice.sign.plugin.adapter.SignNetworkHandlerAdapter.*;
+
 public class ThreadImpl implements Runnable {
 
     private final SignNetworkHandlerAdapter signNetworkHandlerAdapter;
 
-    int animationTick = 1;
+    private int animationTick = 1;
     private boolean valueTick = false;
 
     public ThreadImpl(SignNetworkHandlerAdapter signNetworkHandlerAdapter) {
@@ -33,7 +35,7 @@ public class ThreadImpl implements Runnable {
             try {
                 for (Sign sign : SignManager.getInstance().getSigns().values()) {
                     if (Bukkit.getWorld(sign.getPosition().getWorld()) != null) {
-                        Location location = signNetworkHandlerAdapter.toLocation(sign.getPosition());
+                        Location location = toLocation(sign.getPosition());
                         for (Entity entity : location.getWorld().getNearbyEntities(location,
                             SignManager.getInstance().getSignLayoutConfig().getDistance(),
                             SignManager.getInstance().getSignLayoutConfig().getDistance(),
@@ -68,31 +70,31 @@ public class ThreadImpl implements Runnable {
 
             SearchingAnimation searchingAnimation = SignManager.getInstance().getSignLayoutConfig().getSearchingAnimation();
 
-            SignLayout searchLayer = signNetworkHandlerAdapter.getSearchingLayout(animationTick);
+            SignLayout searchLayer = getSearchingLayout(animationTick);
             Bukkit.getScheduler().runTask(signNetworkHandlerAdapter.getPlugin(), () -> {
                 for (Sign sign : SignManager.getInstance().getSigns().values()) {
-                    boolean exists = signNetworkHandlerAdapter.exists(sign);
+                    boolean exists = exists(sign);
 
                     if (!exists) {
                         sign.setServerInfo(null);
                         continue;
                     }
 
-                    if (signNetworkHandlerAdapter.isMaintenance(sign.getTargetGroup())) {
-                        SignLayout maintenanceLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "maintenance");
-                        String[] layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(maintenanceLayout.getSignLayout().clone(),
+                    if (isMaintenance(sign.getTargetGroup())) {
+                        SignLayout maintenanceLayout = getLayout(sign.getTargetGroup(), "maintenance");
+                        String[] layout = updateOfflineAndMaintenance(maintenanceLayout.getSignLayout().clone(),
                             sign);
                         sign.setServerInfo(null);
-                        signNetworkHandlerAdapter.sendUpdateSynchronized(signNetworkHandlerAdapter.toLocation(sign.getPosition()),
+                        sendUpdateSynchronized(toLocation(sign.getPosition()),
                             layout);
-                        signNetworkHandlerAdapter.changeBlock(signNetworkHandlerAdapter.toLocation(sign.getPosition()),
+                        signNetworkHandlerAdapter.changeBlock(toLocation(sign.getPosition()),
                             maintenanceLayout.getBlockName(),
                             maintenanceLayout.getBlockId(),
                             maintenanceLayout.getSubId());
                         continue;
                     }
 
-                    Location location = signNetworkHandlerAdapter.toLocation(sign.getPosition());
+                    Location location = toLocation(sign.getPosition());
                     if (sign.getServerInfo() == null) {
                         List<String> servers = new ArrayList<>(signNetworkHandlerAdapter.freeServers(sign.getTargetGroup()));
                         if (servers.size() != 0) {
@@ -100,10 +102,10 @@ public class ThreadImpl implements Runnable {
                             ServerInfo serverInfo = signNetworkHandlerAdapter.getServers().get(server);
                             if (serverInfo != null && serverInfo.isOnline() && !serverInfo.isIngame()) {
                                 if (SignManager.getInstance().getSignLayoutConfig().isFullServerHide() && serverInfo.getOnlineCount() >= serverInfo.getMaxPlayers()) {
-                                    String[] layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(searchLayer.getSignLayout().clone(),
+                                    String[] layout = updateOfflineAndMaintenance(searchLayer.getSignLayout().clone(),
                                         sign);
-                                    layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(layout, sign);
-                                    signNetworkHandlerAdapter.sendUpdateSynchronized(location, layout);
+                                    updateOfflineAndMaintenance(layout, sign);
+                                    sendUpdateSynchronized(location, layout);
                                     signNetworkHandlerAdapter.changeBlock(location,
                                         searchLayer.getBlockName(),
                                         searchLayer.getBlockId(),
@@ -115,32 +117,32 @@ public class ThreadImpl implements Runnable {
                                 String[] layout;
                                 SignLayout signLayout;
                                 if (serverInfo.getOnlineCount() >= serverInfo.getMaxPlayers()) {
-                                    signLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "full");
+                                    signLayout = getLayout(sign.getTargetGroup(), "full");
                                     layout = signLayout.getSignLayout().clone();
                                 } else if (serverInfo.getOnlineCount() == 0) {
-                                    signLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "empty");
+                                    signLayout = getLayout(sign.getTargetGroup(), "empty");
                                     layout = signLayout.getSignLayout().clone();
                                 } else {
-                                    signLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "online");
+                                    signLayout = getLayout(sign.getTargetGroup(), "online");
                                     layout = signLayout.getSignLayout().clone();
                                 }
-                                signNetworkHandlerAdapter.updateArray(layout, serverInfo);
-                                signNetworkHandlerAdapter.sendUpdateSynchronized(location, layout);
+                                updateArray(layout, serverInfo);
+                                sendUpdateSynchronized(location, layout);
                                 signNetworkHandlerAdapter.changeBlock(location,
                                     signLayout.getBlockName(),
                                     signLayout.getBlockId(),
                                     signLayout.getSubId());
                             } else {
                                 sign.setServerInfo(null);
-                                String[] layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(searchLayer.getSignLayout().clone(),
+                                String[] layout = updateOfflineAndMaintenance(searchLayer.getSignLayout().clone(),
                                     sign);
-                                signNetworkHandlerAdapter.sendUpdateSynchronized(location, layout);
+                                sendUpdateSynchronized(location, layout);
                             }
                         } else {
                             sign.setServerInfo(null);
-                            String[] layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(searchLayer.getSignLayout().clone(),
+                            String[] layout = updateOfflineAndMaintenance(searchLayer.getSignLayout().clone(),
                                 sign);
-                            signNetworkHandlerAdapter.sendUpdateSynchronized(location, layout);
+                            sendUpdateSynchronized(location, layout);
                             signNetworkHandlerAdapter.changeBlock(location,
                                 searchLayer.getBlockName(),
                                 searchLayer.getBlockId(),
@@ -153,56 +155,56 @@ public class ThreadImpl implements Runnable {
                     if (valueTick) {
                         if (sign.getServerInfo() != null) {
                             ServerInfo serverInfo = sign.getServerInfo();
-                            if (!signNetworkHandlerAdapter.isMaintenance(sign.getTargetGroup())) {
+                            if (!isMaintenance(sign.getTargetGroup())) {
                                 if (serverInfo != null && serverInfo.isOnline() && !serverInfo.isIngame()) {
                                     if ((SignManager.getInstance().getSignLayoutConfig().isFullServerHide() && serverInfo.getOnlineCount() >= serverInfo.getMaxPlayers()) || serverInfo
                                         .getServerConfig()
                                         .isHideServer()) {
                                         sign.setServerInfo(null);
-                                        String[] layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(
-                                            signNetworkHandlerAdapter.getSearchingLayout(((ThreadImpl) SignManager.getInstance().getWorker()).animationTick)
+                                        String[] layout = updateOfflineAndMaintenance(
+                                            getSearchingLayout(((ThreadImpl) SignManager.getInstance().getWorker()).animationTick)
                                                                      .getSignLayout()
                                                                      .clone(),
                                             sign);
-                                        layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(layout, sign);
-                                        signNetworkHandlerAdapter.sendUpdateSynchronized(signNetworkHandlerAdapter.toLocation(sign.getPosition()),
+                                        layout = updateOfflineAndMaintenance(layout, sign);
+                                        sendUpdateSynchronized(toLocation(sign.getPosition()),
                                             layout);
                                         return;
                                     }
                                     String[] layout;
                                     SignLayout signLayout;
                                     if (serverInfo.getOnlineCount() >= serverInfo.getMaxPlayers()) {
-                                        signLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "full");
+                                        signLayout = getLayout(sign.getTargetGroup(), "full");
                                         layout = signLayout.getSignLayout().clone();
                                     } else if (serverInfo.getOnlineCount() == 0) {
-                                        signLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "empty");
+                                        signLayout = getLayout(sign.getTargetGroup(), "empty");
                                         layout = signLayout.getSignLayout().clone();
                                     } else {
-                                        signLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "online");
+                                        signLayout = getLayout(sign.getTargetGroup(), "online");
                                         layout = signLayout.getSignLayout().clone();
                                     }
                                     sign.setServerInfo(serverInfo);
-                                    signNetworkHandlerAdapter.updateArray(layout, serverInfo);
-                                    signNetworkHandlerAdapter.sendUpdateSynchronized(location, layout);
+                                    updateArray(layout, serverInfo);
+                                    sendUpdateSynchronized(location, layout);
                                     signNetworkHandlerAdapter.changeBlock(location,
                                         signLayout.getBlockName(),
                                         signLayout.getBlockId(),
                                         signLayout.getSubId());
                                 } else {
                                     sign.setServerInfo(null);
-                                    String[] layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(signNetworkHandlerAdapter.getSearchingLayout(
+                                    String[] layout = updateOfflineAndMaintenance(getSearchingLayout(
                                         ((ThreadImpl) SignManager.getInstance().getWorker()).animationTick)
                                                                                                                                      .getSignLayout()
                                                                                                                                      .clone(),
                                         sign);
-                                    signNetworkHandlerAdapter.sendUpdateSynchronized(location, layout);
+                                    sendUpdateSynchronized(location, layout);
                                 }
                             } else {
                                 sign.setServerInfo(null);
-                                SignLayout maintenanceLayout = signNetworkHandlerAdapter.getLayout(sign.getTargetGroup(), "maintenance");
-                                String[] layout = signNetworkHandlerAdapter.updateOfflineAndMaintenance(maintenanceLayout.getSignLayout().clone(),
+                                SignLayout maintenanceLayout = getLayout(sign.getTargetGroup(), "maintenance");
+                                String[] layout = updateOfflineAndMaintenance(maintenanceLayout.getSignLayout().clone(),
                                     sign);
-                                signNetworkHandlerAdapter.sendUpdateSynchronized(location, layout);
+                                sendUpdateSynchronized(location, layout);
                                 signNetworkHandlerAdapter.changeBlock(location,
                                     maintenanceLayout.getBlockName(),
                                     maintenanceLayout.getBlockId(),

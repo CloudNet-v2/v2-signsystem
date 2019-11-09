@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import eu.cloudnetservice.sign.core.manager.SignManager;
 import eu.cloudnetservice.sign.core.models.Sign;
+import eu.cloudnetservice.sign.plugin.adapter.SignNetworkHandlerAdapter;
 import eu.cloudnetservice.sign.plugin.hook.ThreadImpl;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,8 +24,8 @@ public class SignListener implements Listener {
     public void handleInteract(PlayerInteractEvent e) {
         if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) && e.getClickedBlock() != null && e.getClickedBlock()
                                                                                                 .getState() instanceof org.bukkit.block.Sign) {
-            if (((ThreadImpl) signManager.getWorker()).getSignNetworkHandlerAdapter().containsPosition(e.getClickedBlock().getLocation())) {
-                Sign sign = ((ThreadImpl) signManager.getWorker()).getSignNetworkHandlerAdapter().getSignByPosition(e.getClickedBlock().getLocation());
+            if (SignNetworkHandlerAdapter.containsPosition(e.getClickedBlock().getLocation())) {
+                Sign sign = SignNetworkHandlerAdapter.getSignByPosition(e.getClickedBlock().getLocation());
                 if (sign.getServerInfo() != null) {
                     String s = sign.getServerInfo().getServiceId().getServerId();
                     ByteArrayDataOutput output = ByteStreams.newDataOutput();

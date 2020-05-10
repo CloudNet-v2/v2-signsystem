@@ -54,6 +54,7 @@ public final class SignsCommand implements CommandExecutor, TabExecutor {
         }
     }
 
+
     private static boolean removeSign(CommandSender commandSender, Player player) {
         if (checkSignSelectorActive(commandSender)) {
             return true;
@@ -63,6 +64,7 @@ public final class SignsCommand implements CommandExecutor, TabExecutor {
         if (block.getState() instanceof org.bukkit.block.Sign) {
             if (SignNetworkHandlerAdapter.containsPosition(block.getLocation())) {
                 Sign sign = SignNetworkHandlerAdapter.getSignByPosition(block.getLocation());
+
 
                 if (sign != null) {
                     CloudAPI.getInstance().getNetworkConnection().sendPacket(new PacketOutRemoveSign(sign));

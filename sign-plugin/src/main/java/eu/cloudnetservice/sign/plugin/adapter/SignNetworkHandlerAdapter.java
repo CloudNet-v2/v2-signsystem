@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
 
+
     private static final Pattern groupPattern = Pattern.compile("(%group%)");
     private static final Pattern fromPattern = Pattern.compile("(%from%)");
     private static final Pattern idPattern = Pattern.compile("(%id%)");
@@ -44,6 +45,7 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
     private static final Pattern wrapperPattern = Pattern.compile("(%wrapper%)");
     private static final Pattern extraPattern = Pattern.compile("(%extra%)");
     private static final Pattern templatePattern = Pattern.compile("(%template%)");
+
     private final JavaPlugin plugin;
     private Map<String, ServerInfo> servers = new ConcurrentHashMap<>(0);
 
@@ -53,38 +55,6 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
         Bukkit.getScheduler().runTask(plugin,
             () -> servers.putAll(CloudAPI.getInstance().getServers().stream().collect(Collectors.toMap(serverInfo -> serverInfo.getServiceId().getServerId(),
                 serverInfo -> serverInfo))));
-    }
-
-    public static boolean isMaintenance(String group) {
-        if (CloudAPI.getInstance().getServerGroupMap().containsKey(group)) {
-            return CloudAPI.getInstance().getServerGroupMap().get(group).isMaintenance();
-        } else {
-            return true;
-        }
-    }
-
-    public static Sign getSignByPosition(Location location) {
-        return SignManager.getInstance().getSigns().values().stream().filter(value -> value.getPosition().equals(toPosition(location))).findFirst().orElse(
-            null);
-    }
-
-    public static Position toPosition(Location location) {
-        return new Position(
-            location.getX(),
-            location.getY(),
-            location.getZ(),
-            location.getWorld().getName(),
-            CloudAPI.getInstance().getGroup());
-    }
-
-    public static boolean containsPosition(Location location) {
-        Position position = toPosition(location);
-        for (Sign sign : SignManager.getInstance().getSigns().values()) {
-            if (sign.getPosition().equals(position)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -189,6 +159,7 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
                     sign.setServerInfo(null);
                     SignLayout signLayout = getSearchingLayout(((ThreadImpl) SignManager.getInstance().getWorker()).getAnimationTick());
                     if (signLayout != null) {
+
                         String[] layout = updateOfflineAndMaintenance(signLayout.getSignLayout().clone(), sign);
                         for (Player all : Bukkit.getOnlinePlayers()) {
                             sendUpdate(all, location, layout);
@@ -324,6 +295,7 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
             null);
     }
 
+
     private static SignGroupLayouts getGroupLayout(String group) {
         return SignManager.getInstance().getSignLayoutConfig().getGroupLayouts().stream().filter(value -> value.getName().equals(group)).findFirst().orElse(
             null);
@@ -416,6 +388,7 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
                     if (newSign != null) {
                         if (exists(newSign)) {
                             Location location = toLocation(newSign.getPosition());
+
                             if (serverInfo.isOnline() && !serverInfo.isIngame()) {
                                 if ((SignManager.getInstance().getSignLayoutConfig().isFullServerHide() && serverInfo.getOnlineCount() >= serverInfo.getMaxPlayers()) || serverInfo
                                     .getServerConfig()

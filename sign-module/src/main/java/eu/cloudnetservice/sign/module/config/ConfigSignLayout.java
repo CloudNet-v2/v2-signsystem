@@ -283,13 +283,11 @@ public class ConfigSignLayout {
             document.append("layout_config", document1);
             document.saveAsConfig(path);
         }
-
         SignLayoutConfig signLayoutConfig = document.getObject("layout_config", TypeToken.get(SignLayoutConfig.class).getType());
 
         boolean injectable = false;
 
         for (SignGroupLayouts groupLayouts : signLayoutConfig.getGroupLayouts()) {
-
             SignLayout signLayout = groupLayouts.getLayouts().stream().filter(signLayout1 -> signLayout1.getName().equalsIgnoreCase("empty")).findFirst().orElse(
                 null);
             if (signLayout == null) {

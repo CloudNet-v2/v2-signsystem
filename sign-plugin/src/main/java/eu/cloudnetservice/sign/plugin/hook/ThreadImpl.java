@@ -117,6 +117,7 @@ public class ThreadImpl implements Runnable {
                                 String[] layout;
                                 SignLayout signLayout;
                                 if (serverInfo.getOnlineCount() >= serverInfo.getMaxPlayers()) {
+
                                     signLayout = getLayout(sign.getTargetGroup(), "full");
                                     layout = signLayout.getSignLayout().clone();
                                 } else if (serverInfo.getOnlineCount() == 0) {
@@ -128,6 +129,7 @@ public class ThreadImpl implements Runnable {
                                 }
                                 updateArray(layout, serverInfo);
                                 sendUpdateSynchronized(location, layout);
+
                                 signNetworkHandlerAdapter.changeBlock(location,
                                     signLayout.getBlockName(),
                                     signLayout.getBlockId(),
@@ -143,6 +145,7 @@ public class ThreadImpl implements Runnable {
                             String[] layout = updateOfflineAndMaintenance(searchLayer.getSignLayout().clone(),
                                 sign);
                             sendUpdateSynchronized(location, layout);
+
                             signNetworkHandlerAdapter.changeBlock(location,
                                 searchLayer.getBlockName(),
                                 searchLayer.getBlockId(),
@@ -186,6 +189,7 @@ public class ThreadImpl implements Runnable {
                                     sign.setServerInfo(serverInfo);
                                     updateArray(layout, serverInfo);
                                     sendUpdateSynchronized(location, layout);
+
                                     signNetworkHandlerAdapter.changeBlock(location,
                                         signLayout.getBlockName(),
                                         signLayout.getBlockId(),

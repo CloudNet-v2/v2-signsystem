@@ -29,11 +29,6 @@ pipeline {
         sh 'mvn package'
       }
     }
-    stage('Re-package') {
-      steps {
-        sh 'mvn package javadoc:aggregate-jar'
-      }
-    }
     stage('Release ZIP') {
       steps {
         sh '''mkdir -p temp;
@@ -45,7 +40,7 @@ pipeline {
     }
     stage('Archive') {
       steps {
-        archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/Notify*.jar', fingerprint: true, onlyIfSuccessful: true
+        archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/Sign*.jar', fingerprint: true, onlyIfSuccessful: true
       }
     }
   }

@@ -5,8 +5,6 @@
 package eu.cloudnetservice.sign.module.config;
 
 import com.google.gson.reflect.TypeToken;
-import de.dytanic.cloudnet.lib.utility.Acceptable;
-import de.dytanic.cloudnet.lib.utility.CollectionWrapper;
 import de.dytanic.cloudnet.lib.utility.document.Document;
 import eu.cloudnetservice.sign.core.models.SearchingAnimation;
 import eu.cloudnetservice.sign.core.models.SignGroupLayouts;
@@ -26,7 +24,7 @@ public class ConfigSignLayout {
     public ConfigSignLayout() {
         if (!Files.exists(path)) {
             new Document().append("layout_config",
-                new SignLayoutConfig(true,
+                Document.GSON.toJsonTree(new SignLayoutConfig(true,
                     false,
                     1D,
                     0.8D,
@@ -253,14 +251,14 @@ public class ConfigSignLayout {
                                 new String[] {"", "server loads...", "                 ", ""},
                                 159,
                                 "BROWN_TERRACOTTA",
-                                14)))))
+                                14))))))
                           .saveAsConfig(path);
         }
     }
 
     public ConfigSignLayout saveLayout(SignLayoutConfig signLayoutConfig) {
         Document document = Document.loadDocument(path);
-        document.append("layout_config", signLayoutConfig);
+        document.append("layout_config", Document.GSON.toJsonTree(signLayoutConfig));
         document.saveAsConfig(path);
         return this;
     }
@@ -285,36 +283,25 @@ public class ConfigSignLayout {
             document.append("layout_config", document1);
             document.saveAsConfig(path);
         }
-
-        SignLayoutConfig signLayoutConfig = document.getObject("layout_config",
-            new TypeToken<SignLayoutConfig>() {
-            }
-                .getType());
+        SignLayoutConfig signLayoutConfig = document.getObject("layout_config", TypeToken.get(SignLayoutConfig.class).getType());
 
         boolean injectable = false;
 
         for (SignGroupLayouts groupLayouts : signLayoutConfig.getGroupLayouts()) {
-
-            {
-                SignLayout signLayout = CollectionWrapper.filter(groupLayouts.getLayouts(), new Acceptable<SignLayout>() {
-                    @Override
-                    public boolean isAccepted(SignLayout signLayout) {
-                        return signLayout.getName().equalsIgnoreCase("empty");
-                    }
-                });
-                if (signLayout == null) {
-                    groupLayouts.getLayouts().add(new SignLayout("empty",
-                        new String[] {"%server%", "&6%state%", "%online_players%/%max_players%", "%motd%"},
-                        159,
-                        "BROWN_TERRACOTTA",
-                        1));
-                    injectable = true;
-                }
+            SignLayout signLayout = groupLayouts.getLayouts().stream().filter(signLayout1 -> signLayout1.getName().equalsIgnoreCase("empty")).findFirst().orElse(
+                null);
+            if (signLayout == null) {
+                groupLayouts.getLayouts().add(new SignLayout("empty",
+                    new String[] {"%server%", "&6%state%", "%online_players%/%max_players%", "%motd%"},
+                    159,
+                    "BROWN_TERRACOTTA",
+                    1));
+                injectable = true;
             }
         }
 
         if (injectable) {
-            document.append("layout_config", signLayoutConfig).saveAsConfig(path);
+            document.append("layout_config", Document.GSON.toJsonTree(signLayoutConfig)).saveAsConfig(path);
         }
 
         return signLayoutConfig;

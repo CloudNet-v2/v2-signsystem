@@ -7,7 +7,7 @@ import eu.cloudnetservice.sign.core.models.Position;
 import eu.cloudnetservice.sign.core.models.Sign;
 import eu.cloudnetservice.sign.core.packets.PacketOutAddSign;
 import eu.cloudnetservice.sign.core.packets.PacketOutRemoveSign;
-import eu.cloudnetservice.sign.plugin.hook.ThreadImpl;
+import eu.cloudnetservice.sign.plugin.adapter.SignNetworkHandlerAdapter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -54,15 +54,17 @@ public final class SignsCommand implements CommandExecutor, TabExecutor {
         }
     }
 
-    private boolean removeSign(CommandSender commandSender, Player player) {
+
+    private static boolean removeSign(CommandSender commandSender, Player player) {
         if (checkSignSelectorActive(commandSender)) {
             return true;
         }
 
         Block block = player.getTargetBlock((Set<Material>) null, 15);
         if (block.getState() instanceof org.bukkit.block.Sign) {
-            if (((ThreadImpl) SignManager.getInstance().getWorker()).getSignNetworkHandlerAdapter().containsPosition(block.getLocation())) {
-                Sign sign = ((ThreadImpl) SignManager.getInstance().getWorker()).getSignNetworkHandlerAdapter().getSignByPosition(block.getLocation());
+            if (SignNetworkHandlerAdapter.containsPosition(block.getLocation())) {
+                Sign sign = SignNetworkHandlerAdapter.getSignByPosition(block.getLocation());
+
 
                 if (sign != null) {
                     CloudAPI.getInstance().getNetworkConnection().sendPacket(new PacketOutRemoveSign(sign));
@@ -73,17 +75,17 @@ public final class SignsCommand implements CommandExecutor, TabExecutor {
         return false;
     }
 
-    private boolean createSign(CommandSender commandSender, String[] args, Player player) {
+    private static boolean createSign(CommandSender commandSender, String[] args, Player player) {
         if (checkSignSelectorActive(commandSender)) {
             return false;
         }
 
         Block block = player.getTargetBlock((Set<Material>) null, 15);
         if (block.getState() instanceof org.bukkit.block.Sign) {
-            if (!((ThreadImpl) SignManager.getInstance().getWorker()).getSignNetworkHandlerAdapter().containsPosition(block.getLocation())) {
+            if (!SignNetworkHandlerAdapter.containsPosition(block.getLocation())) {
                 if (CloudAPI.getInstance().getServerGroupMap().containsKey(args[1])) {
                     Sign sign = new Sign(args[1],
-                        ((ThreadImpl) SignManager.getInstance().getWorker()).getSignNetworkHandlerAdapter().toPosition(block.getLocation()));
+                        SignNetworkHandlerAdapter.toPosition(block.getLocation()));
                     CloudAPI.getInstance().getNetworkConnection().sendPacket(new PacketOutAddSign(sign));
                     commandSender.sendMessage(CloudAPI.getInstance().getPrefix() + "The sign was successfully created!");
                 } else {
@@ -96,7 +98,7 @@ public final class SignsCommand implements CommandExecutor, TabExecutor {
         return false;
     }
 
-    private boolean removeSigns(CommandSender commandSender, String arg) {
+    private static boolean removeSigns(CommandSender commandSender, String arg) {
         if (checkSignSelectorActive(commandSender)) {
             return true;
         }
@@ -111,7 +113,7 @@ public final class SignsCommand implements CommandExecutor, TabExecutor {
         return false;
     }
 
-    private void help(CommandSender commandSender) {
+    private static void help(CommandSender commandSender) {
         if (SignManager.getInstance() != null) {
             commandSender.sendMessage(CloudAPI.getInstance().getPrefix() + "/signs createSign <targetGroup>");
             commandSender.sendMessage(CloudAPI.getInstance().getPrefix() + "/signs removeSign");
@@ -121,7 +123,7 @@ public final class SignsCommand implements CommandExecutor, TabExecutor {
 
     }
 
-    private boolean checkSignSelectorActive(CommandSender commandSender) {
+    private static boolean checkSignSelectorActive(CommandSender commandSender) {
         if (SignManager.getInstance() == null) {
             commandSender.sendMessage(CloudAPI.getInstance().getPrefix() + "The Module \"SignSelector\" isn't enabled!");
             return true;

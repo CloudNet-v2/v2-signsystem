@@ -55,6 +55,38 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
                 serverInfo -> serverInfo))));
     }
 
+    public static boolean isMaintenance(String group) {
+        if (CloudAPI.getInstance().getServerGroupMap().containsKey(group)) {
+            return CloudAPI.getInstance().getServerGroupMap().get(group).isMaintenance();
+        } else {
+            return true;
+        }
+    }
+
+    public static Sign getSignByPosition(Location location) {
+        return SignManager.getInstance().getSigns().values().stream().filter(value -> value.getPosition().equals(toPosition(location))).findFirst().orElse(
+            null);
+    }
+
+    public static Position toPosition(Location location) {
+        return new Position(
+            location.getX(),
+            location.getY(),
+            location.getZ(),
+            location.getWorld().getName(),
+            CloudAPI.getInstance().getGroup());
+    }
+
+    public static boolean containsPosition(Location location) {
+        Position position = toPosition(location);
+        for (Sign sign : SignManager.getInstance().getSigns().values()) {
+            if (sign.getPosition().equals(position)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onServerAdd(ServerInfo serverInfo) {
         servers.put(serverInfo.getServiceId().getServerId(), serverInfo);
@@ -292,10 +324,6 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
             null);
     }
 
-    public JavaPlugin getPlugin() {
-        return plugin;
-    }
-
     private static SignGroupLayouts getGroupLayout(String group) {
         return SignManager.getInstance().getSignLayoutConfig().getGroupLayouts().stream().filter(value -> value.getName().equals(group)).findFirst().orElse(
             null);
@@ -450,6 +478,10 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
         sign.update();
     }
 
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
+
     public Collection<String> freeServers(String group) {
         List<String> servers = new ArrayList<>();
 
@@ -493,37 +525,5 @@ public class SignNetworkHandlerAdapter extends NetworkHandlerAdapter {
 
     public Map<String, ServerInfo> getServers() {
         return servers;
-    }
-
-    public static boolean isMaintenance(String group) {
-        if (CloudAPI.getInstance().getServerGroupMap().containsKey(group)) {
-            return CloudAPI.getInstance().getServerGroupMap().get(group).isMaintenance();
-        } else {
-            return true;
-        }
-    }
-
-    public static Sign getSignByPosition(Location location) {
-        return SignManager.getInstance().getSigns().values().stream().filter(value -> value.getPosition().equals(toPosition(location))).findFirst().orElse(
-            null);
-    }
-
-    public static Position toPosition(Location location) {
-        return new Position(
-            location.getX(),
-            location.getY(),
-            location.getZ(),
-            location.getWorld().getName(),
-            CloudAPI.getInstance().getGroup());
-    }
-
-    public static boolean containsPosition(Location location) {
-        Position position = toPosition(location);
-        for (Sign sign : SignManager.getInstance().getSigns().values()) {
-            if (sign.getPosition().equals(position)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

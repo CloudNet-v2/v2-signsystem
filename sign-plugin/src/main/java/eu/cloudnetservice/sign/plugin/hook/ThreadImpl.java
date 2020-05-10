@@ -163,8 +163,8 @@ public class ThreadImpl implements Runnable {
                                         sign.setServerInfo(null);
                                         String[] layout = updateOfflineAndMaintenance(
                                             getSearchingLayout(((ThreadImpl) SignManager.getInstance().getWorker()).animationTick)
-                                                                     .getSignLayout()
-                                                                     .clone(),
+                                                .getSignLayout()
+                                                .clone(),
                                             sign);
                                         layout = updateOfflineAndMaintenance(layout, sign);
                                         sendUpdateSynchronized(toLocation(sign.getPosition()),
@@ -194,8 +194,8 @@ public class ThreadImpl implements Runnable {
                                     sign.setServerInfo(null);
                                     String[] layout = updateOfflineAndMaintenance(getSearchingLayout(
                                         ((ThreadImpl) SignManager.getInstance().getWorker()).animationTick)
-                                                                                                                                     .getSignLayout()
-                                                                                                                                     .clone(),
+                                            .getSignLayout()
+                                            .clone(),
                                         sign);
                                     sendUpdateSynchronized(location, layout);
                                 }
